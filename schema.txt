@@ -1,0 +1,24 @@
+COMMUNE(INSEECommune, codePostal, adresseMairie, #idLieu, #INSEEDep)
+DEPARTEMENT(INSEEDep, nomDep, #INSEERegion)
+REGION(INSEERegion, nomRegion)
+
+SERVICE(libelle, idServ, descServ, tarifServ, dateDebut, dateFin) //Voir pour #idCommune si il faut mettre
+DEMANDE(idDemande, dateDemande, messageDemande, #idServ, #idPersonne)
+JUSTIFICATIF(idJustificatif, typeJust, descJust, cheminFichier, #idDemande)
+
+ETATCIVIL(typeDocument, dateEtaCivil, #idServ)
+ELECTORAL(bureauVote, #idServ)
+UNIONCIVILE(typeUnion, dateUnion, #idServ, #idPersonne1, #idPersonne2))
+SCOLAIRE(nomSco, numContact, #idServ, #idPersonne)
+RESTAURATION(cantineSouhaitee, #idServ)
+SIGNALEMENT(typeSign, #idLieu)
+
+PERSONNE(idPersonne, prenomPersonne, dateNaissance, numPhone, adressePersonne)
+CITOYEN(nomCitoyen, emailCitoyen, #idPersonne)
+ENFANT(nomEnfant, quotientFamilial, #idPersonne)
+MANGER(#idPersonne, dateDebut, dateFin, nbAbsences, tarif)
+INSCRIRE(nbInscription, classe, #idPersonne, #idCantine))
+CANTINE(idCantine, nbPlace, nbService, #idLieu)
+ECOLE(idEcole, #idEcole, #idPersonne, nbClasses)
+
+LIEU(idLieu, nomLieu, typeLieu, latitudeLieu, longitudeLieu, adresseLieu)
