@@ -1,0 +1,199 @@
+CREATE OR REPLACE DATABASE Projet_BDW;
+USE Projet_BDW;
+
+CREATE TABLE Lieu (
+	idLieu INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	nomLieu VARCHAR(255),
+	typeLieu VARCHAR(255),
+	latitudeLieu INT UNSIGNED NOT NULL,
+	longitudeLieu INT UNSIGNED NOT NULL,
+	PRIMARY KEY (idLieu)
+);
+
+CREATE TABLE Personne (
+	idPersonne INT UNSIGNED NOT NULL,
+	prenomPersonne VARCHAR(255),
+	dateNaissance DATE,
+	numPhone INT UNSIGNED NOT NULL,
+	adressePersonne VARCHAR(255),
+	PRIMARY KEY (idPersonne)
+);
+
+CREATE TABLE Région (
+	InseeRegion INT UNSIGNED NOT NULL,
+	nomRegion VARCHAR(255),
+	PRIMARY KEY (InseeRegion)
+);
+
+CREATE TABLE Département (
+	InseeDep INT UNSIGNED NOT NULL,
+	nomDep VARCHAR(255),
+	InseeRegion INT UNSIGNED NOT NULL,
+	FOREIGN KEY (InseeRegion) REFERENCES Région (InseeRegion)
+		ON UPDATE CASCADE,
+	PRIMARY KEY (InseeDep)
+);
+
+CREATE TABLE Commune (
+	idLieu INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	InseeCommune INT UNSIGNED NOT NULL,
+	codePostal INT UNSIGNED NOT NULL,
+	adresseMairie VARCHAR(255),
+	InseeDep INT UNSIGNED NOT NULL,
+	FOREIGN KEY (idLieu) REFERENCES Lieu (idLieu)
+		ON UPDATE CASCADE,
+	FOREIGN KEY (InseeDep) REFERENCES Département (InseeDep)
+		ON UPDATE CASCADE,
+	PRIMARY KEY (InseeCommune)
+);
+	
+CREATE TABLE Service (
+	idServ INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	libelle VARCHAR(50),
+	descServ VARCHAR(255),
+	tarifServ DOUBLE,
+	dateDebut DATE,
+	dateFin DATE,
+	PRIMARY KEY (idServ)
+);
+	
+CREATE TABLE Demande (
+	idDemande INT UNSIGNED NOT NULL,
+	dateDemande DATETIME,
+	messageDemande VARCHAR(255),
+	idServ INT UNSIGNED NOT NULL,
+	idPersonne INT UNSIGNED NOT NULL,
+	FOREIGN KEY (idServ) REFERENCES Service (idServ)
+		ON UPDATE CASCADE,
+	FOREIGN KEY (idPersonne) REFERENCES Personne (idPersonne)
+		ON UPDATE CASCADE,
+	PRIMARY KEY (idDemande)
+);
+	
+CREATE TABLE Justificatif (
+	idJustificatif INT UNSIGNED NOT NULL,
+	idDemande INT UNSIGNED NOT NULL,
+	typeJust VARCHAR(255),
+	cheminFichier VARCHAR(255),
+	FOREIGN KEY (idDemande) REFERENCES Demande (idDemande)
+		ON UPDATE CASCADE
+);
+	
+CREATE TABLE EtatCivil (
+	typeDocument VARCHAR(255),
+	dateEtatCivil DATE,
+	idServ INT UNSIGNED NOT NULL,
+	FOREIGN KEY (idServ) REFERENCES Service (idServ)
+		ON UPDATE CASCADE
+);
+	
+CREATE TABLE Electoral (
+	bureauVote INT UNSIGNED NOT NULL,
+	idServ INT UNSIGNED NOT NULL,
+	FOREIGN KEY (idServ) REFERENCES Service (idServ)
+		ON UPDATE CASCADE
+);
+	
+CREATE TABLE UnionCivile (
+	typeUnion VARCHAR(255),
+	dateUnion DATE,
+	idServ INT UNSIGNED NOT NULL,
+	idPersonne1 INT UNSIGNED NOT NULL,
+	idPersonne2 INT UNSIGNED NOT NULL,
+	FOREIGN KEY (idServ) REFERENCES Service (idServ)
+		ON UPDATE CASCADE,
+	FOREIGN KEY (idPersonne1) REFERENCES Personne (idPersonne)
+		ON UPDATE CASCADE,
+	FOREIGN KEY (idPersonne2) REFERENCES Personne (idPersonne)
+		ON UPDATE CASCADE
+);
+	
+CREATE TABLE Scolaire (
+	nomSco VARCHAR(255),
+	numContact INT UNSIGNED NOT NULL,
+	idServ INT UNSIGNED NOT NULL,
+	idPersonne INT UNSIGNED NOT NULL,
+	FOREIGN KEY (idServ) REFERENCES Service (idServ)
+		ON UPDATE CASCADE,
+	FOREIGN KEY (idPersonne) REFERENCES Personne (idPersonne)
+		ON UPDATE CASCADE
+);
+	
+CREATE TABLE Restauration (
+	cantineSouhaitee VARCHAR(255),
+	idServ INT UNSIGNED NOT NULL,
+	FOREIGN KEY (idServ) REFERENCES Service (idServ)
+		ON UPDATE CASCADE
+);
+	
+CREATE TABLE Signalement (
+	typeSign VARCHAR(255),
+	idLieu INT UNSIGNED NOT NULL,
+	FOREIGN KEY (idLieu) REFERENCES Lieu (idLieu)
+		ON UPDATE CASCADE
+);
+	
+CREATE TABLE Citoyen (
+	nomCitoyen VARCHAR(255),
+	emailCitoyen VARCHAR(255),
+	idPersonne INT UNSIGNED NOT NULL,
+	FOREIGN KEY (idPersonne) REFERENCES Personne (idPersonne)
+		ON UPDATE CASCADE
+);
+	
+CREATE TABLE Enfant (
+	nomEnfant VARCHAR(255),
+	quotientFamilial DOUBLE,
+	idPersonne INT UNSIGNED NOT NULL,
+	FOREIGN KEY (idPersonne) REFERENCES Personne  (idPersonne)
+		ON UPDATE CASCADE
+);
+	
+CREATE TABLE Manger (
+	idPersonne INT UNSIGNED NOT NULL,
+	dateDebut DATE,
+	dateFin DATE,
+	nbAbsences INT UNSIGNED NOT NULL,
+	tarif DOUBLE,
+	FOREIGN KEY (idPersonne) REFERENCES Personne  (idPersonne)
+		ON UPDATE CASCADE
+);
+
+CREATE TABLE Cantine (
+	idCantine INT UNSIGNED NOT NULL,
+	nbPlace INT UNSIGNED NOT NULL,
+	nbService INT UNSIGNED NOT NULL,
+	idLieu INT UNSIGNED NOT NULL,
+	FOREIGN KEY (idlieu) REFERENCES Lieu (idLieu)
+		ON UPDATE CASCADE,
+	PRIMARY KEY (idCantine)
+);
+	
+CREATE TABLE Inscrire (
+	nbInscription INT UNSIGNED NOT NULL,
+	classe VARCHAR(255),
+	idPersonne INT UNSIGNED NOT NULL,
+	idCantine INT UNSIGNED NOT NULL,
+	FOREIGN KEY (idPersonne) REFERENCES Personne (idPersonne)
+		ON UPDATE CASCADE,
+	FOREIGN KEY (idCantine) REFERENCES Cantine (idCantine)
+		ON UPDATE CASCADE
+);
+	
+CREATE TABLE Utiliser (
+	idCantine INT UNSIGNED NOT NULL,
+	idServ INT UNSIGNED NOT NULL,
+	FOREIGN KEY (idServ) REFERENCES Service (idServ)
+		ON UPDATE CASCADE,
+	FOREIGN KEY (idCantine) REFERENCES Cantine (idCantine)
+		ON UPDATE CASCADE
+);
+	
+CREATE TABLE Ecole (
+	idEcole INT UNSIGNED NOT NULL,
+	nbClasses INT UNSIGNED NOT NULL,
+	idLieu INT UNSIGNED NOT NULL,
+	FOREIGN KEY (idlieu) REFERENCES Lieu (idLieu)
+		ON UPDATE CASCADE,
+	PRIMARY KEY (idEcole)
+);
